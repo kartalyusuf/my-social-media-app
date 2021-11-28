@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -106,6 +107,35 @@ public class HomeFragment extends Fragment {
 
     private void searchPosts(String searchQuery) {
 
+        //patch of all posts
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+        //get all data from ref
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                postList.clear();
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    ModelPost modelPost = ds.getValue(ModelPost.class);
+
+                    if (modelPost.getpTitle().toLowerCase().contains(searchQuery.toLowerCase()) ||
+                            modelPost.getpDescr().toLowerCase().contains(searchQuery.toLowerCase())) {
+                        postList.add(modelPost);
+                    }
+
+
+                    //adapter
+                    adapterPosts = new AdapterPosts(getActivity(),postList);
+                    //set adapter to recyclerview
+                    recyclerView.setAdapter(adapterPosts);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                //in case of error
+                Toast.makeText(getActivity(), ""+error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
@@ -151,13 +181,23 @@ public class HomeFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-
-                
+                //called when user press search button
+                if (!TextUtils.isEmpty(query)) {
+                    searchPosts(query);
+                }else {
+                    loadPosts();
+                }
                 return false;
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
+            public boolean onQueryTextChange(String query) {
+                //called as and when user press any letter
+                if (!TextUtils.isEmpty(query)) {
+                    searchPosts(query);
+                }else {
+                    loadPosts();
+                }
 
                 return false;
             }
