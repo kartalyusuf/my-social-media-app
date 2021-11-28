@@ -47,7 +47,7 @@ public class AdapterPosts extends  RecyclerView.Adapter<AdapterPosts.MyHolder>{
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
         //get data
         String uid = postList.get(position).getUid();
-        String uEmail= postList.get(position).getuEmail();
+        String uEmail = postList.get(position).getuEmail();
         String uName = postList.get(position).getUid();
         String uDp = postList.get(position).getuDp();
         String pId = postList.get(position).getpId();
@@ -59,7 +59,7 @@ public class AdapterPosts extends  RecyclerView.Adapter<AdapterPosts.MyHolder>{
         //convert timestamp
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
         calendar.setTimeInMillis(Long.parseLong(pTimeStamp));
-        String pTime = DateFormat.format("dd/MM/yyyy hh:mm aa",calendar).toString();
+        String pTime = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
 
         //set data holder
         holder.uNameTv.setText(uName);
@@ -72,18 +72,27 @@ public class AdapterPosts extends  RecyclerView.Adapter<AdapterPosts.MyHolder>{
             Picasso.get().load(uDp).placeholder(R.drawable.ic_default_img).into(holder.uPictureIv);
 
 
-        }catch (Exception e) {
+        } catch (Exception e) {
 
         }
 
         //set post ımage
+        //if there is no image i.e. pImage.equals("noImage") then hide ImageView
+        if (pImage.equals("noImage")) {
+
+            holder.pImageIv.setVisibility(View.GONE);
+
+        } else {
+
+
         try {
             Picasso.get().load(pImage).into(holder.pImageIv);
 
 
-        }catch (Exception e) {
+        } catch (Exception e) {
 
         }
+    }
 
         //handle button clicks
         holder.moreBtn.setOnClickListener(new View.OnClickListener() {

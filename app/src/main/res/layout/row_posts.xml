@@ -70,14 +70,16 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="Title"/>
+            android:text="Title"
+            android:autoLink="all"/>
 
         <TextView
             android:id="@+id/pDescriptionTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="The description of the post"
-            android:textColor="#17202A"/>
+            android:textColor="#17202A"
+            android:autoLink="all"/>
 
         <ImageView
             android:id="@+id/pImageIv"
